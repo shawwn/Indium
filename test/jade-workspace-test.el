@@ -75,7 +75,7 @@
   (assess-with-filesystem jade-workspace--test-fs
     (let* ((jade-connection '((url . "file:///foo/bar/index.html")))
           (file (expand-file-name "js/app.js"))
-          (url (format "file://%s" file)))
+          (url (format "file://%sfailing" file)))
      (should (equal (jade-workspace-lookup-file url)
                     file)))))
 
