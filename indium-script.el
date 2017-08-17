@@ -177,13 +177,15 @@ If no sourcemap file can be found, return nil."
 (defun indium-script--download-sourcemap (script)
   "Download and return the sourcemap for SCRIPT.
 If the request fails or has no data, return nil."
+  (message "Downloading sourcemap file...")
   (let ((buf (url-retrieve-synchronously
 	      (indium-script--absolute-sourcemap-url script) t)))
     (with-current-buffer buf
-      (let ((data (buffer-string)))
-	(kill-buffer (current-buffer))
-	(unless (string-empty-p data)
-	  data)))))
+      (message "Downloading sourcemap file...done")
+      (goto-char (point-min))
+      (when (re-search-forward "^HTTP/.+ 200 OK$" nil (line-end-position))
+	(when (search-forward "\n\n" nil t)
+	  (buffer-substring (point) (point-max)))))))
 
 (defun indium-script--absolute-sourcemap-url (script)
   "Return the absolute URL for the sourcemap associated with SCRIPT.
